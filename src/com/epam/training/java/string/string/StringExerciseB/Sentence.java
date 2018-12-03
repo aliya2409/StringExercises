@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Sentence {
+    public static final String WHITE_SPACE = "\\s";
+    public static final String PUNCTUATION = "\\p{P}";
     private String value;
     private List<String> lexemes = new ArrayList<>();
     private List<String> words = new ArrayList<>();
@@ -12,10 +14,9 @@ public class Sentence {
 
     public Sentence(String text) {
         this.value = text;
-        parseSentence();
     }
 
-    private void parseSentence() {
+    public void parseSentence() {
         StringBuilder sb = new StringBuilder(value);
         String[] lookForArray = {",", ";", ":", ".", "!", "?"};
         List<String> lexemesToChange = new ArrayList<>();
@@ -43,7 +44,7 @@ public class Sentence {
         }
 
         String newText = modifiedSentence.toString();
-        String[] splitLexemes = newText.split("\\s");
+        String[] splitLexemes = newText.split(WHITE_SPACE);
 
         for (String lexeme : splitLexemes) {
             lexemes.add(lexeme);
@@ -52,7 +53,7 @@ public class Sentence {
     }
 
     private void filterLexemes(String lexeme) {
-        if (lexeme.matches("\\p{P}")) {
+        if (lexeme.matches(PUNCTUATION)) {
             punctuationMarks.add(lexeme);
         } else {
             words.add(lexeme);

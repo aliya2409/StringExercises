@@ -7,20 +7,28 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Paragraph {
+    public static final String sentenceRegEx = "(^|(?<=[.!?]\\s))(\\d+\\.\\s?)*[А-ЯA-Z][^!?]*?[.!?](?=\\s*(\\d+\\.\\s)*[А-ЯA-Z]|$)";
     private List<Sentence> sentences = new ArrayList<>();
+    private String text;
 
     public Paragraph(String text) {
+        this.text = text;
+    }
+
+    public Paragraph() {
+
+    }
+
+    public void parseParagraph() {
         List<String> tSentences = new ArrayList<>();
-        Pattern pattern = Pattern.compile("(^|(?<=[.!?]\\s))(\\d+\\.\\s?)*[А-ЯA-Z][^!?]*?[.!?](?=\\s*(\\d+\\.\\s)*[А-ЯA-Z]|$)", Pattern.MULTILINE);
+        Pattern pattern = Pattern.compile(sentenceRegEx, Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(text);
         while (matcher.find()) {
             tSentences.add(matcher.group());
         }
         for (String s : tSentences)
             sentences.add(new Sentence(s));
-    }
 
-    public Paragraph() {
     }
 
     public List<Sentence> getSentences() {
@@ -43,20 +51,20 @@ public class Paragraph {
         return totalMarks;
     }
 
-    //main task: to find a word in the first sentence that doesn't appear in any other of this paragraph
+    //main task: find a word in the first sentence that doesn't appear in any other throughout the given paragraph
 
     public List<String> findUniqueWords() {
         List<String> uniqueWords = new ArrayList<>();
         for (String word : sentences.get(0).getWords()) {
             boolean isUnique = true;
-            for (ListIterator<Sentence> sentenceIterator = sentences.listIterator(1); sentenceIterator.hasNext();) {
+            for (ListIterator<Sentence> sentenceIterator = sentences.listIterator(1); sentenceIterator.hasNext(); ) {
                 for (String otherWord : sentenceIterator.next().getWords()) {
-                if(otherWord.equals(word)){
-                    isUnique = false;
-                }
+                    if (otherWord.equals(word)) {
+                        isUnique = false;
+                    }
                 }
             }
-            if(isUnique == true){
+            if (isUnique == true) {
                 uniqueWords.add(word);
             }
         }
@@ -66,7 +74,7 @@ public class Paragraph {
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder("Paragraph{sentences=");
-        for(Sentence sentence : sentences) {
+        for (Sentence sentence : sentences) {
             stringBuilder.append(sentence.getValue());
             stringBuilder.append(" ");
         }
